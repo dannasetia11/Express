@@ -1,8 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAll } = require("./controller");
+const todoController = require("./controller");
 
-router.get("/", getAll);
+router.get("/", todoController.getAll);
+router.get("/:id", todoController.getById);
+router.delete("/", todoController.deleteAll);
+router.delete("/:id", todoController.deleteOne);
+router.post("/", todoController.addOne);
+router.put("/:id", todoController.getUpdate);
+router.get("/login", todoController.getlogin);
 
 module.exports = router;

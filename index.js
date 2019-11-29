@@ -1,18 +1,21 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 5000;
+// const PORT = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { PORT, connect } = require("./config");
 
 app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 app.use("/", require("./routes"));
 app.use("/todo", require("./routes/todos"));
 app.use("/user", require("./routes/users"));
+app.use("/validate", require("./routes/validate"));
 
-app.listen(PORT, () => {
-  console.log(`This app listening on PORT: ${PORT}`);
+connect(() => {
+  app.listen(PORT, () => {
+    console.log(`This app listening on PORT: ${PORT || 3000}`);
+  });
 });

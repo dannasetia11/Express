@@ -1,17 +1,73 @@
 const { todo: todos } = require("../../models");
+const { get } = require("../../config");
+const objectId = require("mongodb").ObjectId;
 
 module.exports = {
   getAll: (req, res) => {
-    res.send(todos);
+    get()
+      .collection("todos")
+      .find({})
+      .toArray()
+      .then(result => {
+        res.send({ massage: "Get all dates", date: result });
+      })
+      .catch(error => {
+        Console.log(error);
+      });
   },
   getById: (req, res) => {
-    const findOne = todos.find(items => {
-      return items.id === Number(req.params.id);
-    });
-    res.send(findOne);
+    get()
+      .collection("todos")
+      .findOne({ _id: objectId(req.params.id) })
+      .then(result => {
+        res.send({ massage: "Get One dates", date: result });
+      })
+      .catch(error => {
+        Console.log(error);
+      });
+  },
+  deleteAll: (req, res) => {
+    get()
+      .collection("user")
+      .remove({})
+      .then(result => {
+        res.send({ massage: "Remove all data", date: result });
+      })
+      .catch(error => {
+        Console.log(error);
+      });
   },
   deleteOne: (req, res) => {
-    let newTodo = todos.filter(item => item.id !== parseInt(req.params.id));
-    res.send(newTodo);
+    get()
+      .collection("todos")
+      .deleteOne({ _id: objectId(req.params.id) })
+      .then(result => {
+        res.send({ massage: "Get One dates", date: result });
+      })
+      .catch(error => {
+        Console.log(error);
+      });
+  },
+  addOne: (req, res) => {
+    get()
+      .collection("todos")
+      .insertOne(req.body)
+      .then(result => {
+        res.send({ message: "Data successfully added", data: result });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+  getUpdate: (req, res) => {
+    get()
+      .collection("todos")
+      .updateOne({ _id: objectId(req.params.id) }, { $set: req.body })
+      .then(result => {
+        res.send({ message: "Data Update", data: result });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
