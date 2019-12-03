@@ -15,6 +15,18 @@ module.exports = {
         Console.log(error);
       });
   },
+  getByEmail: (req, res) => {
+    get()
+      .collection("todos")
+      .find({ email: req.params.email })
+      .toArray()
+      .then(result => {
+        res.send({ message: "Get all datas by email", data: result });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
   getById: (req, res) => {
     get()
       .collection("todos")
@@ -60,14 +72,18 @@ module.exports = {
       });
   },
   getUpdate: (req, res) => {
+    const { id } = req.params;
     get()
       .collection("todos")
-      .updateOne({ _id: objectId(req.params.id) }, { $set: req.body })
+      .updateOne({ _id: objectId(id) }, { $set: req.body })
       .then(result => {
-        res.send({ message: "Data Update", data: result });
+        res.send({
+          message: `Data successfully update with id ${id}`,
+          data: result
+        });
       })
       .catch(error => {
-        console.log(error);
+        console.log("error updafate");
       });
   }
 };

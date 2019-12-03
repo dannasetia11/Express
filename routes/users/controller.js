@@ -1,11 +1,11 @@
-const { todo: todos } = require("../../models");
+const { user: users } = require("../../models");
 const { get } = require("../../config");
 const objectId = require("mongodb").ObjectId;
 
 module.exports = {
   getAll: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .find({})
       .toArray()
       .then(result => {
@@ -17,7 +17,7 @@ module.exports = {
   },
   getById: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .findOne({ _id: objectId(req.params.id) })
       .then(result => {
         res.send({ massage: "Get One dates", date: result });
@@ -28,7 +28,7 @@ module.exports = {
   },
   deleteOne: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .deleteOne({ _id: objectId(req.params.id) })
       .then(result => {
         res.send({ massage: "Get One dates", date: result });
@@ -39,7 +39,7 @@ module.exports = {
   },
   deleteAll: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .remove({})
       .then(result => {
         res.send({ massage: "Remove all data", date: result });
@@ -50,7 +50,7 @@ module.exports = {
   },
   addOne: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .insertOne(req.body)
       .then(result => {
         res.send({ message: "Data successfully added", data: result });
@@ -61,7 +61,7 @@ module.exports = {
   },
   getUpdate: (req, res) => {
     get()
-      .collection("user")
+      .collection("users")
       .updateOne({ _id: objectId(req.params.id) }, { $set: req.body })
       .then(result => {
         res.send({ message: "Data Update", data: result });
@@ -72,10 +72,14 @@ module.exports = {
   },
   getlogin: (req, res) => {
     get()
-      .collection("user")
-      .findOne({ email: body.email, password: body.password })
-      .then(result => {
-        res.send({ massage: "login belum berhasil", date: result });
+      .collection("users")
+      .findOne({ email: req.body.email, password: req.body.password })
+      .then(response => {
+        const { email, firstName } = response;
+        res.status(200).send({
+          massage: "Login Successfully",
+          data: { email, firstName }
+        });
       })
       .catch(error => {
         Console.log(error);
