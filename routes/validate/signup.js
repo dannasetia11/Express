@@ -1,6 +1,8 @@
 const { get } = require("../../config");
 
 const signup = async ({ email, password, firstName, lastName }) => {
+  console.log(email);
+
   try {
     const result = {};
     const data = await get()
