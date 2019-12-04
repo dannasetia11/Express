@@ -6,12 +6,10 @@ const login = async ({ email, password }) => {
     const result = {};
     const data = await get()
       .collection("users")
-      .findOne({ email: email, password: password })
-      .then(async response => {
-        const compared = await comparedPassword(
-          require.body.password,
-          response.password
-        );
+      .findOne({ email: email })
+      .then(async result => {
+        const compared = await comparedPassword(password, result.password);
+        return compared;
       });
 
     if (!email) {
