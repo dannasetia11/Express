@@ -1,6 +1,7 @@
 const { user: users } = require("../../models");
 const { get } = require("../../config");
 const objectId = require("mongodb").ObjectId;
+const { hashPassword, comparedPassword } = require("../../helpers");
 
 module.exports = {
   getAll: (req, res) => {
@@ -48,7 +49,8 @@ module.exports = {
         Console.log(error);
       });
   },
-  addOne: (req, res) => {
+  addOne: async (req, res) => {
+    const hash = await hashPassword(req.body.password);
     get()
       .collection("users")
       .insertOne(req.body)
@@ -70,19 +72,40 @@ module.exports = {
         console.log(error);
       });
   },
-  getlogin: (req, res) => {
+  // getlogin: (req, res) => {
+  //   get()
+  //     .collection("users")
+  //     .findOne({ email: req.body.email, password: req.body.password })
+  //     .then(response => {
+  //       const { email, firstName } = response;
+  //       res.status(200).send({
+  //         massage: "Login Successfully",
+  //         data: { email, firstName }
+  //       });
+  //     })
+  //     .catch(error => {
+  //       Console.log(error);
+  //     });
+  // }
+  getlogin: async (req, res) => {
+    const { body } = req;
+
     get()
       .collection("users")
-      .findOne({ email: req.body.email, password: req.body.password })
-      .then(response => {
-        const { email, firstName } = response;
-        res.status(200).send({
-          massage: "Login Successfully",
-          data: { email, firstName }
-        });
-      })
-      .catch(error => {
-        Console.log(error);
+      .findOne({ email: body.email })
+      .then(async response => {
+        const compared = await comparedPassword(
+          req.body.password,
+          response.password
+        );
+
+        if (compared === true) {
+          const { email, firstName } = response;
+          res.status(200).json({
+            massage: "login successfull",
+            data: { email, firstName }
+          });
+        }
       });
   }
 };

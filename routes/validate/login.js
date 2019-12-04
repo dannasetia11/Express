@@ -5,7 +5,13 @@ const login = async ({ email, password }) => {
     const result = {};
     const data = await get()
       .collection("users")
-      .findOne({ email: email, password: password });
+      .findOne({ email: email, password: password })
+      .then(async response => {
+        const compared = await comparedPassword(
+          require.body.password,
+          response.password
+        );
+      });
 
     if (!email) {
       result.email = "Wajib Isi";
