@@ -53,7 +53,7 @@ module.exports = {
     const hash = await hashPassword(req.body.password);
     get()
       .collection("users")
-      .insertOne(req.body)
+      .insertOne({ ...req.body, password: hash })
       .then(result => {
         res.send({ message: "Data successfully added", data: result });
       })
