@@ -55,7 +55,9 @@ module.exports = {
       .collection("users")
       .insertOne({ ...req.body, password: hash })
       .then(result => {
-        res.send({ message: "Data successfully added", data: result });
+        res
+          .status(201)
+          .json({ message: "Data successfully added", data: result });
       })
       .catch(error => {
         console.log(error);

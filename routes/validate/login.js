@@ -1,4 +1,5 @@
 const { get } = require("../../config");
+const { comparedPassword } = require("../../helpers");
 
 const login = async ({ email, password }) => {
   try {
